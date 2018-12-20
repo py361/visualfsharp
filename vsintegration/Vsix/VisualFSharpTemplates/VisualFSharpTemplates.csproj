@@ -6,6 +6,7 @@
     <AssemblyName>VisualFSharpTemplate</AssemblyName>
     <OutputType>Library</OutputType>
     <ExtensionInstallationFolder>Microsoft\FSharpTemplates</ExtensionInstallationFolder>
+    <VisualStudioInsertionComponent>Microsoft.FSharp.VSIX.Templates</VisualStudioInsertionComponent>
   </PropertyGroup>
 
   <ItemGroup>

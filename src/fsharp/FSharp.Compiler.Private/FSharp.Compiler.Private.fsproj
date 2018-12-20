@@ -18,6 +18,7 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net46' AND '$(OS)' == 'Windows_NT'">
     <!-- portable PDBs can't be properly generated for this assembly -->
     <DebugType>full</DebugType>
+    <EnableSourceLink>false</EnableSourceLink>
   </PropertyGroup>
 
   <Target Name="CopyToBuiltBin" BeforeTargets="BuiltProjectOutputGroup" AfterTargets="CoreCompile">

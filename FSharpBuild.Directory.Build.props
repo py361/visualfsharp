@@ -1,24 +1,24 @@
 <Project>
 
-  <Import Project="build\targets\AssemblyVersions.props" />
+  <!-- <Import Project="build\targets\AssemblyVersions.props" />
   <Import Project="build\targets\PackageVersions.props" />
   <Import Project="build\targets\GitHash.props" />
-  <Import Project="build\targets\CommonPackages.targets" />
+  <Import Project="build\targets\CommonPackages.targets" /> -->
 
   <!-- directory locations -->
   <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <!-- <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration> -->
+    <!-- <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot> -->
     <FSharpSourcesRoot>$(RepoRoot)src</FSharpSourcesRoot>
-    <ArtifactsDir>$(RepoRoot)artifacts</ArtifactsDir>
+    <!-- <ArtifactsDir>$(RepoRoot)artifacts</ArtifactsDir>
     <ToolsRoot>$(ArtifactsDir)\toolset</ToolsRoot>
     <ArtifactsBinDir>$(ArtifactsDir)\bin</ArtifactsBinDir>
     <ArtifactsObjDir>$(ArtifactsDir)\obj</ArtifactsObjDir>
     <ArtifactsPackagesDir>$(ArtifactsDir)\packages</ArtifactsPackagesDir>
     <BaseOutputPath>$(ArtifactsBinDir)\$(MSBuildProjectName)</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(ArtifactsObjDir)\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>$(ArtifactsObjDir)\$(MSBuildProjectName)</BaseIntermediateOutputPath> -->
     <SymStoreDirectory>$(ArtifactsDir)\SymStore</SymStoreDirectory>
-    <ProtoOutputPath Condition="'$(OS)' != 'Unix'">$(ArtifactsBinDir)\fsc\Proto\net46</ProtoOutputPath>
+    <ProtoOutputPath Condition="'$(OS)' != 'Unix'">$(ArtifactsBinDir)\Bootstrap</ProtoOutputPath>
     <ProtoOutputPath Condition="'$(OS)' == 'Unix'">$(ArtifactsBinDir)/fsc/Proto/netcoreapp2.1</ProtoOutputPath>
     <ValueTupleImplicitPackageVersion>4.4.0</ValueTupleImplicitPackageVersion>
   </PropertyGroup>
@@ -45,12 +45,22 @@
 
   <!-- signing -->
   <PropertyGroup>
-    <SkipSigning>false</SkipSigning>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(FSharpSourcesRoot)\fsharp\msft.pubkey</AssemblyOriginatorKeyFile>
-    <StrongNames>true</StrongNames>
+    <!-- ideally we'd only specify $(StrongNameKeyId) = 'Microsoft', but currently we have to manually specify everything -->
+    <StrongNameKeyId>Microsoft</StrongNameKeyId>
+    <!-- <SignAssembly>false</SignAssembly> -->
+    <!-- <StrongNames>true</StrongNames>
+    <StrongNameKeyId>Microsoft</StrongNameKeyId>
     <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>$(FSharpSourcesRoot)\fsharp\msft.pubkey</AssemblyOriginatorKeyFile>
+    <PublicKey>002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293</PublicKey>
+    <PublicKeyToken>b03f5f7f11d50a3a</PublicKeyToken> -->
   </PropertyGroup>
+  <!-- <Target Name="FixDelaySign" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <DelaySign>true</DelaySign>
+      <PublicSign>false</PublicSign>
+    </PropertyGroup>
+  </Target> -->
   <PropertyGroup Condition="'$(MonoPackaging)' == 'true'">
     <AssemblyOriginatorKeyFile>$(FSharpSourcesRoot)\fsharp\test.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -65,7 +75,9 @@
 
   <!-- other -->
   <PropertyGroup>
-    <DebugType>portable</DebugType>
+    <NoWarn Condition="'$(Language)' == 'F#'">$(NoWarn);FS2003</NoWarn><!-- warning when AssemblyInformationalVersion looks like '1.2.3-dev' -->
+    <NoCompilerStandardLib>true</NoCompilerStandardLib><!-- necessary for resource generation using csc.exe -->
+    <!-- <DebugType>portable</DebugType> -->
     <MicroBuildAssemblyFileLanguage>fs</MicroBuildAssemblyFileLanguage>
     <UseStandardResourceNames>false</UseStandardResourceNames>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

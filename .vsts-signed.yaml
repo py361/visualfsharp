@@ -1,35 +1,49 @@
+variables:
+  BuildConfiguration: Release
+  SignType: real
+  VisualStudioDropName: Products/$(System.TeamProject)/$(Build.Repository.Name)/$(Build.SourceBranchName)/$(Build.BuildNumber)
+
 jobs:
 - job: Full_Signed
   pool:
     name: VSEng-MicroBuildVS2017
   timeoutInMinutes: 300
-  variables:
-    MSBuildConfiguration: 'Release'
   steps:
+
   # Install Signing Plugin
   - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@1
     displayName: Install Signing Plugin
     inputs:
       signType: real
-    condition: and(succeeded(), in(variables['PB_SignType'], 'test', 'real'))
+      esrpSigning: true
+    condition: and(succeeded(), ne(variables['SignType'], ''))
 
-  # Install Swix Plugin
-  - task: ms-vseng.MicroBuildTasks.32f78468-e895-4f47-962c-58a699361df8.MicroBuildSwixPlugin@1
-    displayName: Install Swix Plugin
+  # Build
+  - script: eng\common\CIBuild.cmd
+            -configuration $(BuildConfiguration)
+            /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+            /p:VisualStudioDropName=$(VisualStudioDropName)
+            /p:DotNetSignType=$(SignType)
+            /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
+            /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
+    displayName: Build
 
-  # Run build.cmd
-  - task: CmdLine@1
-    displayName: Run build.cmd
+  # Publish Test Results
+  - task: PublishTestResults@1
+    displayName: Publish Test Results
     inputs:
-      filename: build.cmd
-      arguments: microbuild
+      testRunner: NUnit
+      testResultsFiles: 'artifacts/$(BuildConfiguration)/TestResults/*.xml'
+      mergeTestResults: true
+      testRunTitle: 'Unit Tests'
+    condition: succeededOrFailed()
 
   # Publish nightly package to MyGet
   - task: PowerShell@1
     displayName: Publish nightly package to MyGet
     inputs:
       scriptName: 'setup\publish-assets.ps1'
-      arguments: '-binariesPath artifacts\bin -configuration $(MSBuildConfiguration) -branchName $(Build.SourceBranch) -apiKey $(FSharp.MyGetApiKey)'
+      arguments: '-binariesPath artifacts\bin -configuration $(BuildConfiguration) -branchName $(Build.SourceBranch) -apiKey $(FSharp.MyGetApiKey)'
     condition: and(succeeded(), contains(variables['PB_PublishType'], 'myget'))
 
   # Publish packages to Azure Blob Storage
@@ -69,7 +83,8 @@ jobs:
   - task: ms-vseng.MicroBuildTasks.4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8.MicroBuildUploadVstsDropFolder@1
     displayName: Upload VSTS Drop
     inputs:
-      DropFolder: '$(Build.SourcesDirectory)\artifacts\VSSetup\$(MSBuildConfiguration)\Insertion'
+      DropName: $(VisualStudioDropName)
+      DropFolder: '$(Build.SourcesDirectory)\artifacts\VSSetup\$(BuildConfiguration)\Insertion'
     condition: and(succeeded(), contains(variables['PB_PublishType'], 'vsts'))
 
   # Execute cleanup tasks

@@ -67,7 +67,8 @@
     <CopyAndSubstituteText Include="FSharp.Core.UnitTests.dll.config">
       <TargetFilename>FSharp.Core.UnitTests.dll.config</TargetFilename>
       <Pattern1>FSCoreVersion</Pattern1>
-      <Replacement1>$(FSCoreVersion)</Replacement1>
+      <!-- <Replacement1>$(FSCoreVersion)</Replacement1> -->
+      <Replacement1>42.42.42.42</Replacement1>
     </CopyAndSubstituteText>
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TemplateCategory>ItemTemplates</TemplateCategory>
+    <VisualStudioInsertionComponent>Microsoft.VisualFSharp.ItemTemplates</VisualStudioInsertionComponent>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Templates.Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />

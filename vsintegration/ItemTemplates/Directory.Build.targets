@@ -1,3 +1,6 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Templates.Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))" />
+  <ItemGroup>
+    <!-- <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(MicrosoftVSSDKBuildToolsVersion)" PrivateAssets="all" IsImplicitlyDefined="true" /> -->
+  </ItemGroup>
 </Project>

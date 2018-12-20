@@ -9,7 +9,6 @@ jobs:
       dotnet_sdk:
         _command: make
         _args: Configuration=release
-      # disabled until it can be properly fixed
       release_fcs:
         _command: ./fcs/build.sh
         _args: Build
@@ -28,35 +27,38 @@ jobs:
     vmImage: vs2017-win2016
   timeoutInMinutes: 120
   strategy:
-    maxParallel: 7
+    maxParallel: 5
     matrix:
-      ci_part1:
-        _command: build.cmd
-        _args: release ci_part1
-      ci_part2:
-        _command: build.cmd
-        _args: release ci_part2
-      ci_part3:
-        _command: build.cmd
-        _args: release ci_part3
-      ci_part4:
-        _command: build.cmd
-        _args: release ci_part4
-      debug_default:
-        _command: build.cmd
-        _args: debug
-      net40_no_vs:
-        _command: build.cmd
-        _args: release net40
-      release_fcs:
-        _command: fcs\build.cmd
-        _args: TestAndNuget
+      desktop_release:
+        _configuration: Release
+        _testKind: testDesktop
+      coreclr_release:
+        _configuration: Release
+        _testKind: testCoreclr
+      fsharpqa_release:
+        _configuration: Release
+        _testKind: testFSharpQA
+      vs_release:
+        _configuration: Release
+        _testKind: testVs
+      fcs_release:
+        _configuration: Release
+        _testKind: testFcs
   steps:
-  - script: $(_command) $(_args)
+  - script: eng\CIBuild.cmd -configuration $(_configuration) -$(_testKind)
   - task: PublishBuildArtifacts@1
+    displayName: Publish Build Logs
     inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)\artifacts\TestResults'
-      ArtifactName: 'Windows $(_command) $(_args)'
+      PathtoPublish: '$(Build.SourcesDirectory)\artifacts\log\$(_configuration)'
+      ArtifactName: 'Windows $(_configuration) $(_testKind) build log'
       publishLocation: Container
     continueOnError: true
-    condition: failed()
+    condition: not(succeeded())
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Test Results
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)\artifacts\TestResults'
+      ArtifactName: 'Windows $(_configuration) $(_testKind) test results'
+      publishLocation: Container
+    continueOnError: true
+    condition: not(succeeded())

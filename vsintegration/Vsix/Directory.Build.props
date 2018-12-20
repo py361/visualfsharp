@@ -3,6 +3,8 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
+    <BaseOutputPath>$(ArtifactsDir)\VSSetup\$(Configuration)</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(ArtifactsDir)\VSSetup.obj\$(Configuration)\Microsoft.FSharp\</BaseIntermediateOutputPath>
     <VSRootSuffix>RoslynDev</VSRootSuffix>
     <DeployExtension Condition="'$(DeployExtension)' == '' and '$(CI)' != ''">false</DeployExtension>
     <DeployExtension Condition="'$(DeployExtension)' == '' and '$(CI)' == ''">true</DeployExtension>
@@ -31,7 +33,6 @@
     <ExtensionInstallationRoot>CommonExtensions</ExtensionInstallationRoot>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <IsPackage>true</IsPackage>
-    <ImportVsSDK>true</ImportVsSDK>
   </PropertyGroup>
 
 </Project>

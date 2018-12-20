@@ -15,7 +15,7 @@
           BeforeTargets="CoreCompile">
 
     <PropertyGroup>
-        <FsLexPath>$(ArtifactsBinDir)\fslex\Proto\netcoreapp2.0\fslex.dll</FsLexPath>
+        <FsLexPath>$(ArtifactsDir)\Bootstrap\fslex.dll</FsLexPath>
     </PropertyGroup>
 
     <!-- Create the output directory -->
@@ -38,7 +38,7 @@
           BeforeTargets="CoreCompile">
 
     <PropertyGroup>
-        <FsYaccPath>$(ArtifactsBinDir)\fsyacc\Proto\netcoreapp2.0\fsyacc.dll</FsYaccPath>
+        <FsYaccPath>$(ArtifactsDir)\Bootstrap\fsyacc.dll</FsYaccPath>
     </PropertyGroup>
 
     <!-- Create the output directory -->

@@ -112,7 +112,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TestFSharpSuite)' == 'true' OR '$(_RunningRestore)' == 'true'">
-      <Projects Include="$(MSBuildThisFileDirectory)tests\fsharp\FSharp.Tests.FSharpSuite.fsproj" />
+      <Projects Include="$(MSBuildThisFileDirectory)tests\fsharp\FSharpSuite.Tests.fsproj" />
       <Projects Include="$(MSBuildThisFileDirectory)tests\fsharp\SDKTests\AllSdkTargetsTests.proj" />
       <Projects Include="$(MSBuildThisFileDirectory)tests\fsharpqa\testenv\src\PEVerify\PEVerify.csproj" />
       <Projects Include="$(MSBuildThisFileDirectory)src\fsharp\FSharp.Compiler.nuget\Testing.FSharp.Compiler.csproj" />

@@ -6,6 +6,7 @@
     <OutputType>Library</OutputType>
     <ExtensionInstallationFolder>Microsoft\FSharp</ExtensionInstallationFolder>
     <PackageTargetFallback>netcoreapp1.0</PackageTargetFallback>
+    <VisualStudioInsertionComponent>Microsoft.FSharp.VSIX.Full.Core</VisualStudioInsertionComponent>
   </PropertyGroup>
 
   <ItemGroup>
